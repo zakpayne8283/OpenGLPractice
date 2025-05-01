@@ -22,14 +22,16 @@ namespace UnitTests
 	TEST_CLASS(WindowUnitTests)
 	{
 	public:
-
-		TEST_METHOD(ClassInstantiation)
+		TEST_METHOD(WindowInitializeDefault)
 		{
-			Window* newWindow = new Window();
+			// Initialize without parameters - use defaults
+			Window::initialize();
 
-			Assert::IsNotNull(newWindow);
+			// Window should not null
+			Assert::IsNotNull(Window::getWindow());
 
-			delete newWindow;
+			// Tear down (ignore exit())
+			Window::teardown(true);
 		}
 	};
 }

@@ -9,7 +9,7 @@ int main()
 {
 	std::printf("Program Started");
 
-	Window window = Window();
+	Window::initialize(640, 480, "Window Name");
 
 	return 0;
 }
