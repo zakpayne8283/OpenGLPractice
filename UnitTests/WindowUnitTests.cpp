@@ -33,5 +33,19 @@ namespace UnitTests
 			// Tear down (ignore exit())
 			Window::teardown(true);
 		}
+
+		TEST_METHOD(WindowInitializeWithParameters)
+		{
+			// Initialize with custom parameters
+			Window::initialize(1600, 900, "Custom Title");
+
+			// TODO: Make sure the initialized parameters are active (e.g. window name should match)
+
+			// Window should not null
+			Assert::IsNotNull(Window::getWindow());
+
+			// Tear down (ignore exit())
+			Window::teardown(true);
+		}
 	};
 }
