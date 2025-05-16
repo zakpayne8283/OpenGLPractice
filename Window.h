@@ -1,5 +1,6 @@
 #pragma once
-#include "GLFW/glfw3.h"
+
+#include "OpenGLLoader.h"
 
 class Window
 {
@@ -16,6 +17,9 @@ public:
 	/// <returns>True/false window was created</returns>
 	static bool initialize(int width=640, int height=480, const char* title = "Title")
 	{
+		// TODO: Break out the different initialization steps into their own things
+		// e.g. initShaders, initBuffers, etc.
+
 		windowWidth = width;
 		windowHeight = height;
 		windowTitle = title;
@@ -46,6 +50,12 @@ public:
 
 		// Sets the context for OpenGL to draw
 		glfwMakeContextCurrent(window);
+		
+		// Now initialize GL
+		gladLoadGL();
+
+		// Setup viewport
+		glViewport(0, 0, windowWidth, windowHeight);
 
 		return true;
 	}
@@ -106,7 +116,9 @@ private:
 	}
 };
 
-// Defaults
+// ---- Defaults ----
+
+// Window info
 int Window::windowWidth = 640;
 int Window::windowHeight = 480;
 const char* Window::windowTitle = "Title";
