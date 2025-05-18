@@ -11,28 +11,32 @@
 
 int main()
 {
-	std::printf("Program Started");
+	std::printf("Program Started\n\n");
 
 	Window::initialize(800, 600, "OpenGL Practice");
 
-	GLfloat triangleVerticies[3][2] =
-	{
-		{ -0.90, -0.90 },
-		{ 0.85, -0.90 },
-		{ -0.90,  0.85 }
+	float triangleVertices[] = {
+		-0.5f, -0.5f, 0.0f,
+		 0.5f, -0.5f, 0.0f,
+		 0.0f,  0.5f, 0.0f
 	};
-
-	// Triangle* triangle = new Triangle(triangleVerticies);
 
 	// While the window shouldn't close
 	while (!glfwWindowShouldClose(Window::getWindow()))
 	{
-		// Render objects here
+		// ---- Render objects here
 
-		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT);
+		// Clear color buffer
+		Window::clearColorBuffer();
+		
+		// Copies the triangleVertices data into the vertex buffer
+		glBufferData(GL_ARRAY_BUFFER, sizeof(triangleVertices), triangleVertices, GL_STATIC_DRAW);
 
-		// End render
+		// Specifies information about the VBO
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+		glEnableVertexAttribArray(0);
+
+		// ---- End render
 
 		// Buffer swap
 		glfwSwapBuffers(Window::getWindow());
