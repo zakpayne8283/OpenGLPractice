@@ -27,11 +27,12 @@ int main()
 	// While the window shouldn't close
 	while (!glfwWindowShouldClose(Window::getWindow()))
 	{
-		// Draw the triangles
-		//Window::drawShape(triangle);
+		// Render objects here
 
-		//// Run shaders
-		//Window::runShaders();
+		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+		glClear(GL_COLOR_BUFFER_BIT);
+
+		// End render
 
 		// Buffer swap
 		glfwSwapBuffers(Window::getWindow());
@@ -39,6 +40,8 @@ int main()
 		// Check for "should close" events
 		glfwPollEvents();
 	}
+
+	Window::teardown();
 
 	return 0;
 }

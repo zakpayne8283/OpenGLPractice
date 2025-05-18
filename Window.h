@@ -25,7 +25,7 @@ public:
 		windowTitle = title;
 
 		// Setup the error callback function
-		glfwSetErrorCallback(errorCallback);
+		glfwSetErrorCallback(error_callback);
 
 		// Try to init GLFW, exit on failure
 		if (!glfwInit())
@@ -47,6 +47,8 @@ public:
 
 		// Key callbacks - used for input
 		glfwSetKeyCallback(window, key_callback);
+		// Resize callback - used on window resize
+		glfwSetFramebufferSizeCallback(window, resize_callback);
 
 		// Sets the context for OpenGL to draw
 		glfwMakeContextCurrent(window);
@@ -103,7 +105,7 @@ private:
 	static GLFWwindow* window;
 
 	// Error callback function for GLFW to print errors
-	static void errorCallback(int error, const char* description)
+	static void error_callback(int error, const char* description)
 	{
 		fprintf(stderr, "Error %d: %s\n", error, description);
 	}
@@ -113,6 +115,11 @@ private:
 	{
 		if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
 			glfwSetWindowShouldClose(window, GLFW_TRUE);
+	}
+
+	static void resize_callback(GLFWwindow* window, int width, int height)
+	{
+		glViewport(0, 0, width, height);
 	}
 };
 
