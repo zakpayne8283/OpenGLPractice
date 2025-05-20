@@ -58,17 +58,17 @@ public:
 		glfwMakeContextCurrent(window);
 		
 		// Now initialize GL
-		gladLoadGL();
-
-		// Setup viewport
-		glViewport(0, 0, windowWidth, windowHeight);
-
-		// Initialize the VBO
-		glGenBuffers(1, &VBO);				// generate buffer
-		glBindBuffer(GL_ARRAY_BUFFER, VBO);	// bind the vertex buffer
+		if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
+		{
+			std::printf("ERROR: Failed to initialize GLAD!");
+			exit(EXIT_FAILURE);
+		}
 
 		// Initialize the shaders
 		initializeShaders();
+
+		// Setup viewport
+		glViewport(0, 0, windowWidth, windowHeight);
 
 		std::printf("Window successfully initialized!\n");
 
@@ -110,6 +110,11 @@ public:
 	{
 		return window;
 	}
+	
+	static unsigned int getShaderProgram()
+	{
+		return shaderProgram;
+	}
 
 private:
 	// Window constants
@@ -122,6 +127,9 @@ private:
 	static int windowWidth;
 	static int windowHeight;
 	static const char* windowTitle;
+
+	// Vertex array object
+	static unsigned int VAO;
 
 	// Vertex buffer object
 	static unsigned int VBO;
@@ -232,9 +240,6 @@ private:
 			std::printf("-- Shader program successfully created!\n");
 		}
 
-		// Use the newly created program
-		glUseProgram(shaderProgram);
-
 		std::printf("-- Cleaning up created shaders...\n");
 
 		// Clean up created shaders
@@ -254,6 +259,7 @@ const char* Window::windowTitle = "Title";
 GLFWwindow* Window::window = nullptr;
 
 // Buffers
+unsigned int Window::VAO;
 unsigned int Window::VBO;
 
 // ---- Shaders
