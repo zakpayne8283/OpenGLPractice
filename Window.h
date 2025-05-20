@@ -90,6 +90,8 @@ public:
 	/// <param name="ignoreExit">Ignores exit() - used in testing</param>
 	static void teardown(bool ignoreExit=false)
 	{
+		glDeleteProgram(shaderProgram);
+
 		// Destroy window
 		glfwDestroyWindow(window);
 
