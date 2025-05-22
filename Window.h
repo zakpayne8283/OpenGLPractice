@@ -94,6 +94,9 @@ public:
 	{
 		glDeleteProgram(shaderProgram);
 
+		delete vertexShader;
+		delete fragmentShader;
+
 		// Destroy window
 		glfwDestroyWindow(window);
 
@@ -144,12 +147,8 @@ private:
 
 	// ---- Shaders
 
-	static const char* VERTEX_SHADER_SOURCE;
-	static const char* FRAGMENT_SHADER_SOURCE;
-
-	// static unsigned int vertexShader;
 	static VertexShader* vertexShader;
-	static unsigned int fragmentShader;
+	static FragmentShader* fragmentShader;
 
 	static unsigned int shaderProgram;
 
@@ -189,27 +188,11 @@ private:
 		vertexShader = new VertexShader();
 		vertexShader->compile();
 
-		std::printf("-- Building fragment shader...\n");
+		// Create the vertex shader
+		fragmentShader = new FragmentShader();
+		fragmentShader->compile();
 
-		// Create the fragment shader
-		fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-
-		// Set fragment shader source and compile it
-		glShaderSource(fragmentShader, 1, &FRAGMENT_SHADER_SOURCE, NULL);
-		glCompileShader(fragmentShader);
-
-		// Ensure successful shader compilation
-		glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &success);
-
-		if (!success)
-		{
-			glGetShaderInfoLog(fragmentShader, 512, NULL, infoLog);
-			std::printf("-- %s -- %s", "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n", infoLog);
-		}
-		else
-		{
-			std::printf("-- Fragment shader built successfully!\n");
-		}
+		// TODO: Handle if either shader compile doesn't work
 
 		std::printf("-- Creating shader program...\n");
 
@@ -218,7 +201,7 @@ private:
 
 		// Attach the shaders to the program and link the progarm
 		glAttachShader(shaderProgram, vertexShader->shader);
-		glAttachShader(shaderProgram, fragmentShader);
+		glAttachShader(shaderProgram, fragmentShader->shader);
 		glLinkProgram(shaderProgram);
 
 		glGetProgramiv(shaderProgram, GL_LINK_STATUS, &success);
@@ -235,7 +218,7 @@ private:
 
 		// Clean up created shaders
 		glDeleteShader(vertexShader->shader);
-		glDeleteShader(fragmentShader);
+		glDeleteShader(fragmentShader->shader);
 
 		std::printf("- Shaders initialized successfully!\n");
 	}
@@ -255,15 +238,7 @@ unsigned int Window::VBO;
 
 // ---- Shaders
 VertexShader* Window::vertexShader;
-unsigned int Window::fragmentShader;
-
-const char* Window::FRAGMENT_SHADER_SOURCE =
-"#version 330 core\n"
-"out vec4 FragColor;\n"
-"void main()\n"
-"{\n"
-"	FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);\n"
-"}\0";
+FragmentShader* Window::fragmentShader;
 
 unsigned int Window::shaderProgram;
 
