@@ -3,7 +3,9 @@
 #include<fstream>
 
 #include "OpenGLLoader.h"
+#include "Shaders.h"
 
+// TODO: Rename window to something better and more descriptive
 class Window
 {
 public:
@@ -113,6 +115,10 @@ public:
 		return window;
 	}
 	
+	/// <summary>
+	/// Gets the shader program being used by the window
+	/// </summary>
+	/// <returns></returns>
 	static unsigned int getShaderProgram()
 	{
 		return shaderProgram;
@@ -141,7 +147,8 @@ private:
 	static const char* VERTEX_SHADER_SOURCE;
 	static const char* FRAGMENT_SHADER_SOURCE;
 
-	static unsigned int vertexShader;
+	// static unsigned int vertexShader;
+	static VertexShader* vertexShader;
 	static unsigned int fragmentShader;
 
 	static unsigned int shaderProgram;
@@ -173,32 +180,14 @@ private:
 	// Initialize all shaders
 	static void initializeShaders()
 	{
-		std::printf("- Initializing shaders...\n");
-
 		int  success;
 		char infoLog[512];
 
-		std::printf("-- Building vertex shader...\n");
+		std::printf("- Initializing shaders...\n");
 
 		// Create the vertex shader
-		vertexShader = glCreateShader(GL_VERTEX_SHADER);
-
-		// Set vertex shader source and compile it
-		glShaderSource(vertexShader, 1, &VERTEX_SHADER_SOURCE, NULL);
-		glCompileShader(vertexShader);
-
-		// Ensure successful shader compilation
-		glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
-
-		if (!success)
-		{
-			glGetShaderInfoLog(vertexShader, 512, NULL, infoLog);
-			std::printf("-- %s -- %s", "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n", infoLog);
-		}
-		else
-		{
-			std::printf("-- Vertex shader built successfully!\n");
-		}
+		vertexShader = new VertexShader();
+		vertexShader->compile();
 
 		std::printf("-- Building fragment shader...\n");
 
@@ -214,7 +203,7 @@ private:
 
 		if (!success)
 		{
-			glGetShaderInfoLog(vertexShader, 512, NULL, infoLog);
+			glGetShaderInfoLog(fragmentShader, 512, NULL, infoLog);
 			std::printf("-- %s -- %s", "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n", infoLog);
 		}
 		else
@@ -228,7 +217,7 @@ private:
 		shaderProgram = glCreateProgram();
 
 		// Attach the shaders to the program and link the progarm
-		glAttachShader(shaderProgram, vertexShader);
+		glAttachShader(shaderProgram, vertexShader->shader);
 		glAttachShader(shaderProgram, fragmentShader);
 		glLinkProgram(shaderProgram);
 
@@ -245,7 +234,7 @@ private:
 		std::printf("-- Cleaning up created shaders...\n");
 
 		// Clean up created shaders
-		glDeleteShader(vertexShader);
+		glDeleteShader(vertexShader->shader);
 		glDeleteShader(fragmentShader);
 
 		std::printf("- Shaders initialized successfully!\n");
@@ -265,16 +254,8 @@ unsigned int Window::VAO;
 unsigned int Window::VBO;
 
 // ---- Shaders
-unsigned int Window::vertexShader;
+VertexShader* Window::vertexShader;
 unsigned int Window::fragmentShader;
-
-const char* Window::VERTEX_SHADER_SOURCE =
-"#version 330 core\n"
-"layout (location = 0) in vec3 aPos;\n"
-"void main()\n"
-"{\n"
-"   gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n"
-"}\0";
 
 const char* Window::FRAGMENT_SHADER_SOURCE =
 "#version 330 core\n"
